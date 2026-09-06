@@ -3,63 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EMI Calculator</title>
+<title>Finance Calculator</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f2f2f2;
-    margin: 0;
-    padding: 20px;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f8fb;
+  color:#17324d;
 }
 
-.container {
-    max-width: 500px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:18px;
 }
 
-h2 {
-    text-align: center;
+h1{
+  text-align:center;
+  color:#0b5cab;
+  margin:8px 0 4px;
 }
 
-label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
+.sub{
+  text-align:center;
+  color:#607d8b;
+  margin-bottom:20px;
 }
 
-input, select, button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 7px;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  margin:16px 0;
+  box-shadow:0 4px 18px rgba(0,0,0,.08);
 }
 
-button {
-    margin-top: 20px;
-    background: #1976d2;
-    color: white;
-    border: none;
-    cursor: pointer;
+h2{
+  margin-top:0;
+  color:#087f5b;
 }
 
-.result {
-    margin-top: 20px;
-    padding: 15px;
-    background: #eeeeee;
-    border-radius: 10px;
+label{
+  display:block;
+  font-weight:bold;
+  margin:12px 0 6px;
 }
 
-.result p {
-    font-size: 17px;
-    margin: 10px 0;
+input,select{
+  width:100%;
+  padding:14px;
+  border:1px solid #c9d6df;
+  border-radius:10px;
+  font-size:17px;
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:13px 18px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  margin:10px 6px 0 0;
+}
+
+.calc{
+  background:#0b7a5a;
+  color:#fff;
+}
+
+.reset{
+  background:#607d8b;
+  color:#fff;
+}
+
+.result{
+  background:#eef8f4;
+  border-left:5px solid #087f5b;
+  padding:15px;
+  border-radius:10px;
+  margin-top:18px;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.value{
+  font-size:21px;
+  font-weight:bold;
+  color:#0b5cab;
+}
+
+.small{
+  font-size:13px;
+  color:#607d8b;
+}
+
+@media(max-width:600px){
+  .row{
+    grid-template-columns:1fr;
+  }
+
+  .container{
+    padding:10px;
+  }
+
+  .card{
+    padding:16px;
+  }
 }
 </style>
 </head>
@@ -68,431 +125,443 @@ button {
 
 <div class="container">
 
+<h1>Finance Calculator</h1>
+<div class="sub">
+EMI • Reverse EMI • Interest Calculator
+</div>
+
+
+<!-- EMI CALCULATOR -->
+
+<div class="card">
+
 <h2>EMI Calculator</h2>
 
 <label>Loan Amount (₹)</label>
-<input type="number" id="amount" placeholder="Example: 200000">
+<input
+  id="loan"
+  type="number"
+  min="0"
+  placeholder="Example: 200000"
+>
 
-<label>Interest Rate (% per year)</label>
-<input type="number" id="rate" step="0.01" placeholder="Example: 18">
+<label>Monthly EMI (₹)</label>
+<input
+  id="emi"
+  type="number"
+  min="0"
+  placeholder="Example: 10000"
+>
 
-<label>Loan Tenure (Months)</label>
-<input type="number" id="months" placeholder="Example: 24">
+<label>Tenure (Months)</label>
+<input
+  id="months"
+  type="number"
+  min="1"
+  placeholder="Example: 24"
+>
 
-<button onclick="calculateEMI()">Calculate EMI</button>
+<div>
+<button class="calc" onclick="calculateEMI()">
+Calculate
+</button>
 
-<div class="result">
-<p>Monthly EMI: ₹<span id="emi">0</span></p>
-<p>Total Interest: ₹<span id="interest">0</span></p>
-<p>Total Amount: ₹<span id="total">0</span></p>
+<button class="reset"
+onclick="resetBox('emiBox',['loan','emi','months'])">
+Reset
+</button>
+</div>
+
+<div id="emiBox"></div>
+
+</div>
+
+
+<!-- REVERSE EMI -->
+
+<div class="card">
+
+<h2>Reverse EMI Calculator</h2>
+
+<div class="small">
+Enter EMI, interest rate and tenure to estimate the eligible loan amount.
+</div>
+
+<label>Monthly EMI (₹)</label>
+
+<input
+  id="rEmi"
+  type="number"
+  min="0"
+  placeholder="Example: 10000"
+>
+
+<label>Annual Interest Rate (%)</label>
+
+<input
+  id="rate"
+  type="number"
+  min="0"
+  step="0.01"
+  placeholder="Example: 12"
+>
+
+<label>Tenure (Months)</label>
+
+<input
+  id="rMonths"
+  type="number"
+  min="1"
+  placeholder="Example: 24"
+>
+
+<div>
+
+<button class="calc" onclick="reverseEMI()">
+Calculate
+</button>
+
+<button class="reset"
+onclick="resetBox('reverseBox',['rEmi','rate','rMonths'])">
+Reset
+</button>
+
+</div>
+
+<div id="reverseBox"></div>
+
+</div>
+
+
+<!-- FD CALCULATOR -->
+
+<div class="card">
+
+<h2>Deposit / FD Calculator</h2>
+
+<label>Deposit Amount (₹)</label>
+
+<input
+  id="fdAmount"
+  type="number"
+  min="0"
+  placeholder="Example: 100000"
+>
+
+<label>Annual Interest Rate (%)</label>
+
+<input
+  id="fdRate"
+  type="number"
+  min="0"
+  step="0.01"
+  placeholder="Example: 7"
+>
+
+<label>Years</label>
+
+<input
+  id="fdYears"
+  type="number"
+  min="0"
+  step="0.1"
+  placeholder="Example: 2"
+>
+
+<div>
+
+<button class="calc" onclick="fdCalc()">
+Calculate
+</button>
+
+<button class="reset"
+onclick="resetBox('fdBox',['fdAmount','fdRate','fdYears'])">
+Reset
+</button>
+
+</div>
+
+<div id="fdBox"></div>
+
 </div>
 
 </div>
+
 
 <script>
-function calculateEMI() {
 
-    let P = parseFloat(document.getElementById("amount").value);
-    let annualRate = parseFloat(document.getElementById("rate").value);
-    let N = parseInt(document.getElementById("months").value);
+const money = n =>
+new Intl.NumberFormat('en-IN',{
+  style:'currency',
+  currency:'INR',
+  maximumFractionDigits:2
+}).format(n);
 
-    if (!P || !annualRate || !N) {
-        alert("Please enter all details");
-        return;
-    }
 
-    let r = annualRate / 12 / 100;
+const num = id =>
+parseFloat(document.getElementById(id).value);
 
-    let EMI;
 
-    if (r === 0) {
-        EMI = P / N;
-    } else {
-        EMI = P * r * Math.pow(1 + r, N) /
-              (Math.pow(1 + r, N) - 1);
-    }
+// EMI CALCULATION
 
-    let totalAmount = EMI * N;
-    let totalInterest = totalAmount - P;
+function calculateEMI(){
 
-    document.getElementById("emi").innerText =
-        EMI.toFixed(2);
+  const P = num('loan');
+  const E = num('emi');
+  const n = num('months');
 
-    document.getElementById("interest").innerText =
-        totalInterest.toFixed(2);
+  if(!(P>0)||!(E>0)||!(n>0)){
 
-    document.getElementById("total").innerText =
-        totalAmount.toFixed(2);
+    msg(
+      'emiBox',
+      'Please enter Loan Amount, Monthly EMI and Tenure.'
+    );
+
+    return;
+  }
+
+  const total = E*n;
+  const interest = total-P;
+
+  const monthlyRate =
+    findMonthlyRate(P,E,n);
+
+  const annual =
+    monthlyRate*12*100;
+
+  const flat =
+    interest/(P*n)*1200;
+
+  document.getElementById('emiBox').innerHTML = `
+
+  <div class="result">
+
+    <div class="row">
+
+      <div>
+        Total Payment<br>
+        <span class="value">
+          ${money(total)}
+        </span>
+      </div>
+
+      <div>
+        Total Interest<br>
+        <span class="value">
+          ${money(interest)}
+        </span>
+      </div>
+
+      <div>
+        Reducing ROI (approx.)<br>
+        <span class="value">
+          ${annual.toFixed(2)}% p.a.
+        </span>
+      </div>
+
+      <div>
+        Flat Rate (approx.)<br>
+        <span class="value">
+          ${flat.toFixed(2)}% p.a.
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+  `;
 }
+
+
+// FIND INTEREST RATE
+
+function findMonthlyRate(P,E,n){
+
+  let lo=0;
+  let hi=1;
+
+  for(let i=0;i<100;i++){
+
+    let r=(lo+hi)/2;
+
+    let v =
+      r===0
+      ? P/n
+      : P*r*Math.pow(1+r,n) /
+        (Math.pow(1+r,n)-1);
+
+    if(v>E)
+      hi=r;
+    else
+      lo=r;
+  }
+
+  return (lo+hi)/2;
+}
+
+
+// REVERSE EMI
+
+function reverseEMI(){
+
+  const E = num('rEmi');
+  const annual = num('rate');
+  const n = num('rMonths');
+
+  if(
+    !(E>0) ||
+    annual<0 ||
+    !(n>0)
+  ){
+
+    msg(
+      'reverseBox',
+      'Please enter EMI, Interest Rate and Tenure.'
+    );
+
+    return;
+  }
+
+  const r =
+    annual/100/12;
+
+  const P =
+    r===0
+    ? E*n
+    : E*(1-Math.pow(1+r,-n))/r;
+
+  const total =
+    E*n;
+
+  const interest =
+    total-P;
+
+  document.getElementById('reverseBox').innerHTML = `
+
+  <div class="result">
+
+    <div class="row">
+
+      <div>
+        Estimated Loan Amount<br>
+        <span class="value">
+          ${money(P)}
+        </span>
+      </div>
+
+      <div>
+        Total Payment<br>
+        <span class="value">
+          ${money(total)}
+        </span>
+      </div>
+
+      <div>
+        Total Interest<br>
+        <span class="value">
+          ${money(interest)}
+        </span>
+      </div>
+
+      <div>
+        Interest Rate<br>
+        <span class="value">
+          ${annual.toFixed(2)}% p.a.
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+  `;
+}
+
+
+// FD CALCULATOR
+
+function fdCalc(){
+
+  const P = num('fdAmount');
+  const r = num('fdRate');
+  const y = num('fdYears');
+
+  if(
+    !(P>0) ||
+    r<0 ||
+    !(y>0)
+  ){
+
+    msg(
+      'fdBox',
+      'Please enter Deposit Amount, Interest Rate and Years.'
+    );
+
+    return;
+  }
+
+  const interest =
+    P*r*y/100;
+
+  const maturity =
+    P+interest;
+
+  document.getElementById('fdBox').innerHTML = `
+
+  <div class="result">
+
+    <div class="row">
+
+      <div>
+        Interest Amount<br>
+        <span class="value">
+          ${money(interest)}
+        </span>
+      </div>
+
+      <div>
+        Maturity Amount<br>
+        <span class="value">
+          ${money(maturity)}
+        </span>
+      </div>
+
+    </div>
+
+    <p class="small">
+      Simple-interest estimate.
+    </p>
+
+  </div>
+
+  `;
+}
+
+
+// MESSAGE
+
+function msg(id,t){
+
+  document.getElementById(id).innerHTML =
+    '<div class="result">'+t+'</div>';
+
+}
+
+
+// RESET
+
+function resetBox(box,ids){
+
+  ids.forEach(id =>
+    document.getElementById(id).value=''
+  );
+
+  document.getElementById(box).innerHTML='';
+
+}
+
 </script>
 
 </body>
-  </html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>EMI Finance Calculator</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      background: #eef2f7;
-      color: #1f2937;
-      padding: 15px;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: auto;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #0f4c81, #1677c8);
-      color: white;
-      padding: 22px 18px;
-      border-radius: 18px;
-      text-align: center;
-      margin-bottom: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    }
-
-    .header h1 {
-      font-size: 25px;
-      margin-bottom: 6px;
-    }
-
-    .header p {
-      font-size: 13px;
-      opacity: 0.9;
-    }
-
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 15px;
-      box-shadow: 0 5px 18px rgba(0,0,0,0.08);
-    }
-
-    .card h2 {
-      font-size: 19px;
-      margin-bottom: 15px;
-      color: #0f4c81;
-    }
-
-    .field {
-      margin-bottom: 14px;
-    }
-
-    .field label {
-      display: block;
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 7px;
-      color: #4b5563;
-    }
-
-    .input-box {
-      position: relative;
-    }
-
-    .input-box span {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-weight: bold;
-      color: #6b7280;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 13px 13px 13px 35px;
-      border: 1px solid #d1d5db;
-      border-radius: 11px;
-      outline: none;
-      font-size: 16px;
-      background: #fafafa;
-    }
-
-    select {
-      padding-left: 13px;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #1677c8;
-      background: white;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    button {
-      flex: 1;
-      border: none;
-      padding: 14px;
-      border-radius: 11px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .calculate {
-      background: #1677c8;
-      color: white;
-    }
-
-    .calculate:active {
-      transform: scale(0.98);
-    }
-
-    .reset {
-      background: #e5e7eb;
-      color: #374151;
-    }
-
-    .result {
-      display: none;
-      margin-top: 18px;
-    }
-
-    .main-result {
-      background: linear-gradient(135deg, #0f4c81, #1677c8);
-      color: white;
-      padding: 20px;
-      border-radius: 15px;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .main-result small {
-      display: block;
-      font-size: 13px;
-      opacity: 0.9;
-      margin-bottom: 5px;
-    }
-
-    .main-result strong {
-      font-size: 30px;
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .result-item {
-      background: #f3f6fa;
-      border-radius: 12px;
-      padding: 14px 10px;
-      text-align: center;
-    }
-
-    .result-item small {
-      display: block;
-      color: #6b7280;
-      font-size: 11px;
-      margin-bottom: 5px;
-    }
-
-    .result-item strong {
-      font-size: 15px;
-      color: #111827;
-    }
-
-    .formula {
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #f8fafc;
-      color: #64748b;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .divider {
-      height: 1px;
-      background: #e5e7eb;
-      margin: 20px 0;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 12px;
-      color: #6b7280;
-      padding: 10px;
-    }
-
-    .error {
-      display: none;
-      background: #fee2e2;
-      color: #991b1b;
-      padding: 11px;
-      border-radius: 10px;
-      font-size: 13px;
-      margin-top: 10px;
-    }
-
-    @media (max-width: 380px) {
-      .header h1 {
-        font-size: 22px;
-      }
-
-      .main-result strong {
-        font-size: 26px;
-      }
-
-      .result-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <div class="header">
-    <h1>💰 EMI Finance Calculator</h1>
-    <p>EMI • Interest • Total Payment • Reverse EMI</p>
-  </div>
-
-  <!-- EMI CALCULATOR -->
-  <div class="card">
-
-    <h2>📊 EMI Calculator</h2>
-
-    <div class="field">
-      <label>Loan Amount</label>
-      <div class="input-box">
-        <span>₹</span>
-        <input
-          type="number"
-          id="loanAmount"
-          placeholder="Example: 200000"
-          inputmode="numeric"
-        >
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Annual Interest Rate (%)</label>
-      <div class="input-box">
-        <span>%</span>
-        <input
-          type="number"
-          id="interestRate"
-          placeholder="Example: 18"
-          step="0.01"
-          inputmode="decimal"
-        >
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Loan Tenure</label>
-      <select id="tenure">
-        <option value="12">12 Months (1 Year)</option>
-        <option value="18">18 Months</option>
-        <option value="24">24 Months (2 Years)</option>
-        <option value="36">36 Months (3 Years)</option>
-        <option value="48">48 Months (4 Years)</option>
-        <option value="60">60 Months (5 Years)</option>
-        <option value="72">72 Months (6 Years)</option>
-        <option value="84">84 Months (7 Years)</option>
-        <option value="120">120 Months (10 Years)</option>
-      </select>
-    </div>
-
-    <div class="buttons">
-      <button class="calculate" onclick="calculateEMI()">
-        Calculate EMI
-      </button>
-
-      <button class="reset" onclick="resetEMI()">
-        Reset
-      </button>
-    </div>
-
-    <div id="emiError" class="error">
-      Please enter valid loan amount and interest rate.
-    </div>
-
-    <div id="emiResult" class="result">
-
-      <div class="main-result">
-        <small>Monthly EMI</small>
-        <strong id="emiValue">₹0</strong>
-      </div>
-
-      <div class="result-grid">
-
-        <div class="result-item">
-          <small>Loan Amount</small>
-          <strong id="resultLoan">₹0</strong>
-        </div>
-
-        <div class="result-item">
-          <small>Monthly Interest</small>
-          <strong id="monthlyInterest">₹0</strong>
-        </div>
-
-        <div class="result-item">
-          <small>Annual Interest</small>
-          <strong id="annualInterest">₹0</strong>
-        </div>
-
-        <div class="result-item">
-          <small>Total Interest</small>
-          <strong id="totalInterest">₹0</strong>
-        </div>
-
-        <div class="result-item">
-          <small>Total Payment</small>
-          <strong id="totalPayment">₹0</strong>
-        </div>
-
-        <div class="result-item">
-          <small>Tenure</small>
-          <strong id="resultTenure">0 Months</strong>
-        </div>
-
-      </div>
-
-      <div class="formula">
-        EMI is calculated using the reducing-balance method.
-        <br>
-        Monthly interest rate = Annual rate ÷ 12.
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- REVERSE EMI -->
-  <div class="card">
-
-    <h2>🔄 Reverse EMI Calculator</h2>
-
-    <div class="field">
-      <label>Desired Monthly EMI</label>
-
-      <div class="input-box">
-        <span>
+    </html>
