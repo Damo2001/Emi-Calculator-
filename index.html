@@ -126,8 +126,9 @@ button{
 <div class="container">
 
 <h1>Finance Calculator</h1>
+
 <div class="sub">
-EMI • Reverse EMI • Interest Calculator
+  EMI • Reverse EMI • Interest Calculator
 </div>
 
 
@@ -162,14 +163,17 @@ EMI • Reverse EMI • Interest Calculator
 >
 
 <div>
+
 <button class="calc" onclick="calculateEMI()">
 Calculate
 </button>
 
-<button class="reset"
-onclick="resetBox('emiBox',['loan','emi','months'])">
+<button
+  class="reset"
+  onclick="resetBox('emiBox',['loan','emi','months'])">
 Reset
 </button>
+
 </div>
 
 <div id="emiBox"></div>
@@ -221,8 +225,9 @@ Enter EMI, interest rate and tenure to estimate the eligible loan amount.
 Calculate
 </button>
 
-<button class="reset"
-onclick="resetBox('reverseBox',['rEmi','rate','rMonths'])">
+<button
+  class="reset"
+  onclick="resetBox('reverseBox',['rEmi','rate','rMonths'])">
 Reset
 </button>
 
@@ -274,8 +279,9 @@ Reset
 Calculate
 </button>
 
-<button class="reset"
-onclick="resetBox('fdBox',['fdAmount','fdRate','fdYears'])">
+<button
+  class="reset"
+  onclick="resetBox('fdBox',['fdAmount','fdRate','fdYears'])">
 Reset
 </button>
 
@@ -290,16 +296,14 @@ Reset
 
 <script>
 
-const money = n =>
-new Intl.NumberFormat('en-IN',{
+const money = n => new Intl.NumberFormat('en-IN',{
   style:'currency',
   currency:'INR',
   maximumFractionDigits:2
 }).format(n);
 
-
 const num = id =>
-parseFloat(document.getElementById(id).value);
+  parseFloat(document.getElementById(id).value);
 
 
 // EMI CALCULATION
@@ -320,57 +324,71 @@ function calculateEMI(){
     return;
   }
 
-  const total = E*n;
-  const interest = total-P;
+  const total = E * n;
+
+  const interest = total - P;
 
   const monthlyRate =
     findMonthlyRate(P,E,n);
 
   const annual =
-    monthlyRate*12*100;
+    monthlyRate * 12 * 100;
 
   const flat =
-    interest/(P*n)*1200;
+    interest / (P*n) * 1200;
+
+  // Monthly interest amount
+  const monthlyInterest =
+    interest / n;
+
 
   document.getElementById('emiBox').innerHTML = `
 
-  <div class="result">
+    <div class="result">
 
-    <div class="row">
+      <div class="row">
 
-      <div>
-        Total Payment<br>
-        <span class="value">
-          ${money(total)}
-        </span>
-      </div>
+        <div>
+          Total Payment<br>
+          <span class="value">
+            ${money(total)}
+          </span>
+        </div>
 
-      <div>
-        Total Interest<br>
-        <span class="value">
-          ${money(interest)}
-        </span>
-      </div>
+        <div>
+          Total Interest<br>
+          <span class="value">
+            ${money(interest)}
+          </span>
+        </div>
 
-      <div>
-        Reducing ROI (approx.)<br>
-        <span class="value">
-          ${annual.toFixed(2)}% p.a.
-        </span>
-      </div>
+        <div>
+          Monthly Interest<br>
+          <span class="value">
+            ${money(monthlyInterest)}
+          </span>
+        </div>
 
-      <div>
-        Flat Rate (approx.)<br>
-        <span class="value">
-          ${flat.toFixed(2)}% p.a.
-        </span>
+        <div>
+          Reducing ROI (approx.)<br>
+          <span class="value">
+            ${annual.toFixed(2)}% p.a.
+          </span>
+        </div>
+
+        <div>
+          Flat Rate (approx.)<br>
+          <span class="value">
+            ${flat.toFixed(2)}% p.a.
+          </span>
+        </div>
+
       </div>
 
     </div>
 
-  </div>
-
   `;
+
 }
 
 
@@ -378,26 +396,26 @@ function calculateEMI(){
 
 function findMonthlyRate(P,E,n){
 
-  let lo=0;
-  let hi=1;
+  let lo = 0;
+  let hi = 1;
 
   for(let i=0;i<100;i++){
 
-    let r=(lo+hi)/2;
+    let r = (lo + hi) / 2;
 
     let v =
-      r===0
-      ? P/n
-      : P*r*Math.pow(1+r,n) /
+      r === 0
+      ? P / n
+      : P * r * Math.pow(1+r,n) /
         (Math.pow(1+r,n)-1);
 
-    if(v>E)
-      hi=r;
+    if(v > E)
+      hi = r;
     else
-      lo=r;
+      lo = r;
   }
 
-  return (lo+hi)/2;
+  return (lo + hi) / 2;
 }
 
 
@@ -411,7 +429,7 @@ function reverseEMI(){
 
   if(
     !(E>0) ||
-    annual<0 ||
+    annual < 0 ||
     !(n>0)
   ){
 
@@ -424,58 +442,70 @@ function reverseEMI(){
   }
 
   const r =
-    annual/100/12;
+    annual / 100 / 12;
 
   const P =
-    r===0
-    ? E*n
-    : E*(1-Math.pow(1+r,-n))/r;
+    r === 0
+    ? E * n
+    : E * (1-Math.pow(1+r,-n)) / r;
 
   const total =
-    E*n;
+    E * n;
 
   const interest =
-    total-P;
+    total - P;
+
+  const monthlyInterest =
+    interest / n;
+
 
   document.getElementById('reverseBox').innerHTML = `
 
-  <div class="result">
+    <div class="result">
 
-    <div class="row">
+      <div class="row">
 
-      <div>
-        Estimated Loan Amount<br>
-        <span class="value">
-          ${money(P)}
-        </span>
-      </div>
+        <div>
+          Estimated Loan Amount<br>
+          <span class="value">
+            ${money(P)}
+          </span>
+        </div>
 
-      <div>
-        Total Payment<br>
-        <span class="value">
-          ${money(total)}
-        </span>
-      </div>
+        <div>
+          Total Payment<br>
+          <span class="value">
+            ${money(total)}
+          </span>
+        </div>
 
-      <div>
-        Total Interest<br>
-        <span class="value">
-          ${money(interest)}
-        </span>
-      </div>
+        <div>
+          Total Interest<br>
+          <span class="value">
+            ${money(interest)}
+          </span>
+        </div>
 
-      <div>
-        Interest Rate<br>
-        <span class="value">
-          ${annual.toFixed(2)}% p.a.
-        </span>
+        <div>
+          Monthly Interest<br>
+          <span class="value">
+            ${money(monthlyInterest)}
+          </span>
+        </div>
+
+        <div>
+          Interest Rate<br>
+          <span class="value">
+            ${annual.toFixed(2)}% p.a.
+          </span>
+        </div>
+
       </div>
 
     </div>
 
-  </div>
-
   `;
+
 }
 
 
@@ -489,7 +519,7 @@ function fdCalc(){
 
   if(
     !(P>0) ||
-    r<0 ||
+    r < 0 ||
     !(y>0)
   ){
 
@@ -502,40 +532,42 @@ function fdCalc(){
   }
 
   const interest =
-    P*r*y/100;
+    P * r * y / 100;
 
   const maturity =
-    P+interest;
+    P + interest;
+
 
   document.getElementById('fdBox').innerHTML = `
 
-  <div class="result">
+    <div class="result">
 
-    <div class="row">
+      <div class="row">
 
-      <div>
-        Interest Amount<br>
-        <span class="value">
-          ${money(interest)}
-        </span>
+        <div>
+          Interest Amount<br>
+          <span class="value">
+            ${money(interest)}
+          </span>
+        </div>
+
+        <div>
+          Maturity Amount<br>
+          <span class="value">
+            ${money(maturity)}
+          </span>
+        </div>
+
       </div>
 
-      <div>
-        Maturity Amount<br>
-        <span class="value">
-          ${money(maturity)}
-        </span>
-      </div>
+      <p class="small">
+        Simple-interest estimate.
+      </p>
 
     </div>
 
-    <p class="small">
-      Simple-interest estimate.
-    </p>
-
-  </div>
-
   `;
+
 }
 
 
@@ -564,4 +596,4 @@ function resetBox(box,ids){
 </script>
 
 </body>
-    </html>
+</html>
